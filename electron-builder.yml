@@ -13,3 +13,16 @@ win:
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  artifactName: Volante-Setup-${version}.exe
+mac:
+  icon: resources/volante-icon.png
+  category: public.app-category.developer-tools
+  # Not notarised yet: ad-hoc signed so it runs on Apple Silicon.
+  identity: '-'
+  target:
+    - target: dmg
+      arch:
+        - arm64
+        - x64
+dmg:
+  artifactName: Volante-${version}-${arch}.dmg

@@ -61,7 +61,7 @@ export default function SettingsDialog({ settings, onClose }: { settings: Settin
                 <div className="srow">
                   <div className="l">
                     <div className="t">Launch at login</div>
-                    <div className="h">Start {BRAND.name} quietly in the tray when you sign in to Windows.</div>
+                    <div className="h">Start {BRAND.name} quietly in the tray when you sign in to your computer.</div>
                   </div>
                   <div className="c">
                     <Switch checked={settings.launchAtLogin} onChange={(v) => update({ launchAtLogin: v })} />

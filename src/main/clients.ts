@@ -11,7 +11,8 @@ import { BRAND } from '../shared/brand'
 
 const KEY = BRAND.clientKey
 const home = homedir()
-const appData = process.env.APPDATA ?? join(home, 'AppData', 'Roaming')
+// Roaming app data on Windows, ~/Library/Application Support on macOS.
+const appData = app.getPath('appData')
 const localAppData = process.env.LOCALAPPDATA ?? join(home, 'AppData', 'Local')
 
 export interface Endpoint {
@@ -46,7 +47,8 @@ export function bridgeEntry(ep: Endpoint): { command: string; args: string[]; en
 function claudeDesktopPaths(): string[] {
   const out: string[] = []
   const pk = join(localAppData, 'Packages')
-  if (existsSync(pk)) {
+  // The Microsoft Store build of Claude Desktop keeps its config in a package folder.
+  if (process.platform === 'win32' && existsSync(pk)) {
     for (const d of readdirSync(pk)) {
       if (/^(AnthropicPBC\.)?Claude_/i.test(d)) out.push(join(pk, d, 'LocalCache', 'Roaming', 'Claude', 'claude_desktop_config.json'))
     }

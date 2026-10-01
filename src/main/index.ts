@@ -17,7 +17,8 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-app.setAppUserModelId(BRAND.appId)
+if (process.platform === 'win32') app.setAppUserModelId(BRAND.appId)
+const isMac = process.platform === 'darwin'
 
 let win: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -63,8 +64,10 @@ function createWindow(show: boolean): void {
     title: BRAND.name,
     icon: resource('icon.png'),
     backgroundColor: bg,
-    titleBarStyle: 'hidden',
-    titleBarOverlay: { color: bg, symbolColor: fg, height: 36 },
+    // macOS keeps its traffic lights, inset into the frame; Windows gets themed overlay controls.
+    ...(isMac
+      ? { titleBarStyle: 'hiddenInset' as const, trafficLightPosition: { x: 16, y: 13 } }
+      : { titleBarStyle: 'hidden' as const, titleBarOverlay: { color: bg, symbolColor: fg, height: 36 } }),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: true,
@@ -125,6 +128,8 @@ function updateTray(): void {
 
 function createTray(): void {
   const img = nativeImage.createFromPath(resource('tray.png'))
+  // The menu bar recolours template images for light and dark menus.
+  if (isMac) img.setTemplateImage(true)
   tray = new Tray(img.isEmpty() ? nativeImage.createEmpty() : img)
   tray.on('click', showWindow)
   updateTray()
@@ -228,7 +233,7 @@ function registerIpc(): void {
 
   ipcMain.handle('titlebar:set', (_e, { color, symbolColor }: { color: string; symbolColor: string }) => {
     try {
-      win?.setTitleBarOverlay({ color, symbolColor, height: 36 })
+      if (!isMac) win?.setTitleBarOverlay({ color, symbolColor, height: 36 })
       win?.setBackgroundColor(color)
     } catch {
       /* not supported on this platform */
@@ -267,6 +272,9 @@ function init(): void {
 
 activity.on('entry', (e) => win?.webContents.send('activity', e))
 activity.on('cleared', () => win?.webContents.send('activity-cleared'))
+
+// Clicking the dock icon brings the window back on macOS.
+app.on('activate', () => showWindow())
 
 app.on('second-instance', (_e, argv) => {
   if (!argv.includes('--hidden')) showWindow()

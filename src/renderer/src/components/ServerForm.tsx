@@ -102,7 +102,7 @@ export default function ServerForm({ draft, onChange, autoFocus }: { draft: Draf
           <div className="field">
             <label>Keys and settings (environment variables)</label>
             <KvEditor value={draft.env ?? {}} onChange={(env) => set({ env })} keyPlaceholder="API_KEY" valuePlaceholder="value" secret />
-            <span className="hint">Stored encrypted with your Windows account.</span>
+            <span className="hint">Stored encrypted by your operating system.</span>
           </div>
         </>
       ) : (
@@ -119,7 +119,7 @@ export default function ServerForm({ draft, onChange, autoFocus }: { draft: Draf
           <div className="field">
             <label>Headers</label>
             <KvEditor value={draft.headers ?? {}} onChange={(headers) => set({ headers })} keyPlaceholder="Authorization" valuePlaceholder="Bearer …" secret />
-            <span className="hint">Stored encrypted with your Windows account.</span>
+            <span className="hint">Stored encrypted by your operating system.</span>
           </div>
         </>
       )}
