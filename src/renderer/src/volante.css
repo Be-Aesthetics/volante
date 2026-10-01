@@ -1,0 +1,1078 @@
+/* Volante: a dark frame lit by an orange-red glow, with the work floating
+   on light sheets. Big headlines in Inter Tight, everything else in small
+   uppercase JetBrains Mono with [bracketed] labels and "/ " titles. The
+   orange-red marks numbering and anything that needs attention. Names,
+   commands, URLs and inputs keep their real case. */
+
+@font-face {
+  font-family: 'Inter Tight';
+  src: url('./fonts/InterTight-Latin.woff2') format('woff2');
+  font-weight: 300 700;
+  font-display: block;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter Tight';
+  src: url('./fonts/InterTight-LatinExt.woff2') format('woff2');
+  font-weight: 300 700;
+  font-display: block;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./fonts/JetBrainsMono-Latin.woff2') format('woff2');
+  font-weight: 300 600;
+  font-display: block;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./fonts/JetBrainsMono-LatinExt.woff2') format('woff2');
+  font-weight: 300 600;
+  font-display: block;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@layer app {
+  :root[data-brand='volante'] {
+    --accent: #fc3a1e;
+    --accent-strong: #ff5a3d;
+    --accent-text: #ffffff;
+    --font-display: 'Inter Tight', 'Segoe UI Variable Display', system-ui, sans-serif;
+    --font-sans: 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
+    --font-serif: var(--font-display);
+    --font-mono: 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
+    --font-size: 12px;
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --frame: #0d0d0d;
+    /* Window controls sit on the dark frame in both themes. */
+    --chrome-bg: #0d0d0d;
+    --chrome-fg: #eeeeee;
+
+    /* The sheet (light). */
+    --page: #fafafa;
+    --sidebar: #0d0d0d;
+    --composer: #fafafa;
+    --card: transparent;
+    --panel: #eeeeee;
+    --hover: #eeeeee;
+    --active: #eeeeee;
+    --code-bg: #f2f2f2;
+    --text: #0d0d0d;
+    --text-muted: #3d3d3d;
+    --text-faint: #767676;
+    --border: #e2e2e2;
+    --border-strong: #cfcfcf;
+    --rule: #e2e2e2;
+    --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    --up: #0d0d0d;
+    --down: #fc3a1e;
+    --warn: #fc3a1e;
+  }
+
+  :root[data-brand='volante'][data-mode='dark'] {
+    --page: #141414;
+    --composer: #141414;
+    --panel: #1e1e1e;
+    --hover: #1e1e1e;
+    --active: #1e1e1e;
+    --code-bg: #101010;
+    --text: #eeeeee;
+    --text-muted: #b8b8b8;
+    --text-faint: #7a7a7a;
+    --border: rgba(238, 238, 238, 0.1);
+    --border-strong: rgba(238, 238, 238, 0.2);
+    --rule: rgba(238, 238, 238, 0.1);
+    --up: #eeeeee;
+  }
+
+  /* Small uppercase mono is the house voice... */
+  [data-brand='volante'] body {
+    background: var(--frame);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+  /* ...but anything the user typed or will copy keeps its real case. */
+  [data-brand='volante'] input,
+  [data-brand='volante'] textarea,
+  [data-brand='volante'] pre,
+  [data-brand='volante'] code,
+  [data-brand='volante'] .mono,
+  [data-brand='volante'] .value,
+  [data-brand='volante'] .vo-value,
+  [data-brand='volante'] .logs,
+  [data-brand='volante'] .snippet,
+  [data-brand='volante'] .tool .name > span:first-child,
+  [data-brand='volante'] .tool-name,
+  [data-brand='volante'] .server-card .sub,
+  [data-brand='volante'] .client .path,
+  [data-brand='volante'] .import-row .sub,
+  [data-brand='volante'] .server-meta .mono,
+  [data-brand='volante'] .kv {
+    text-transform: none;
+  }
+
+  /* ------------------------------------------------------------ frame */
+
+  [data-brand='volante'] .app {
+    background:
+      radial-gradient(55% 60% at 100% 100%, rgba(252, 58, 30, 0.55), transparent 70%),
+      radial-gradient(35% 40% at 88% 0%, rgba(252, 58, 30, 0.22), transparent 70%),
+      var(--frame);
+    position: relative;
+  }
+  .frame-drag {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 150px;
+    height: 40px;
+    -webkit-app-region: drag;
+    z-index: 1;
+  }
+  [data-brand='volante'] .main {
+    margin: 40px 12px 12px 0;
+    background: var(--page);
+    color: var(--text);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  /* The sidebar lives on the dark frame in both themes. */
+  [data-brand='volante'] .sidebar {
+    --text: #eeeeee;
+    --text-muted: rgba(238, 238, 238, 0.7);
+    --text-faint: rgba(238, 238, 238, 0.45);
+    --rule: rgba(238, 238, 238, 0.1);
+    --border: rgba(238, 238, 238, 0.1);
+    --panel: rgba(238, 238, 238, 0.06);
+    --hover: rgba(238, 238, 238, 0.06);
+    color: var(--text);
+    background: transparent;
+    border-right: 0;
+    width: 232px;
+  }
+  [data-brand='volante'] .sidebar-head {
+    height: 40px;
+    padding: 0 20px;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+    -webkit-app-region: no-drag;
+    pointer-events: none;
+  }
+  /* No logo in the frame: the strip stays as spacing above the nav. */
+  [data-brand='volante'] .sidebar-head .brand-mark,
+  [data-brand='volante'] .sidebar-head .brand-name {
+    display: none;
+  }
+  [data-brand='volante'] .brand-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  [data-brand='volante'] .nav {
+    padding: 16px 8px 8px;
+    gap: 0;
+  }
+  [data-brand='volante'] .nav-item {
+    border-radius: 3px;
+    padding: 0 12px;
+    min-height: 32px;
+    font-size: 12px;
+    color: var(--text-muted);
+    gap: 10px;
+  }
+  [data-brand='volante'] .nav-item svg {
+    display: none;
+  }
+  [data-brand='volante'] .nav > .nav-item::before {
+    content: '○';
+    font-size: 10px;
+    width: 10px;
+  }
+  [data-brand='volante'] .nav > .nav-item.active::before {
+    content: '●';
+    color: var(--accent);
+  }
+  [data-brand='volante'] .nav-item:hover,
+  [data-brand='volante'] .nav-item.active {
+    background: var(--panel);
+    color: var(--text);
+  }
+  [data-brand='volante'] .nav-item .count {
+    font-size: 10.5px;
+    color: var(--text-faint);
+  }
+  [data-brand='volante'] .side-label {
+    padding: 18px 20px 6px;
+    font-size: 10.5px;
+    letter-spacing: 0;
+    color: var(--text-faint);
+  }
+  [data-brand='volante'] .side-label::before {
+    content: '/\00a0';
+  }
+  [data-brand='volante'] .side-scroll {
+    padding: 0 8px 8px;
+  }
+  [data-brand='volante'] .server-item .dot {
+    margin: 0 1px;
+  }
+  [data-brand='volante'] .side-empty {
+    border: 1px dashed var(--rule);
+    border-radius: 3px;
+    color: var(--text-muted);
+  }
+  [data-brand='volante'] .side-foot {
+    border-top: 1px solid var(--rule);
+    padding: 8px;
+  }
+  [data-brand='volante'] .router-pill {
+    border-radius: 3px;
+    font-size: 11px;
+  }
+  [data-brand='volante'] .router-pill:hover {
+    background: var(--panel);
+  }
+
+  /* ------------------------------------------------------------ sheet */
+
+  [data-brand='volante'] .head {
+    height: 52px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  [data-brand='volante'] .head h1 {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .head h1::before {
+    content: '/\00a0';
+    color: var(--text-faint);
+  }
+  [data-brand='volante'] .page {
+    max-width: none;
+    padding: 32px 24px 80px;
+  }
+  [data-brand='volante'] .page-title,
+  [data-brand='volante'] .vo-title,
+  [data-brand='volante'] .dialog-nav h2,
+  [data-brand='volante'] .dialog.small h3,
+  [data-brand='volante'] .empty h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+  }
+  [data-brand='volante'] .page-title {
+    font-size: 52px;
+    margin: 8px 0 20px;
+    max-width: 820px;
+  }
+  [data-brand='volante'] .page-sub {
+    font-size: 11.5px;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 440px;
+    margin-bottom: 40px;
+  }
+
+  /* Bracketed labels. */
+  [data-brand='volante'] .section-head h2::before,
+  [data-brand='volante'] .vo-label::before,
+  [data-brand='volante'] .endpoint .label::before,
+  [data-brand='volante'] .act-detail h4::before,
+  [data-brand='volante'] .vo-figure .k::before {
+    content: '[';
+  }
+  [data-brand='volante'] .section-head h2::after,
+  [data-brand='volante'] .vo-label::after,
+  [data-brand='volante'] .endpoint .label::after,
+  [data-brand='volante'] .act-detail h4::after,
+  [data-brand='volante'] .vo-figure .k::after {
+    content: ']';
+  }
+  [data-brand='volante'] .section-head h2,
+  [data-brand='volante'] .endpoint .label,
+  [data-brand='volante'] .act-detail h4 {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  /* --------------------------------------------------------- overview */
+
+  .vo-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-bottom: 1px solid var(--rule);
+    min-height: 340px;
+  }
+  .vo-lead {
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .vo-title {
+    font-size: clamp(40px, 4.8vw, 68px);
+    margin: 0;
+    max-width: 12ch;
+    animation: vo-in 0.7s var(--ease) both;
+  }
+  .vo-sub {
+    font-size: 11.5px;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0;
+    max-width: 360px;
+  }
+  .vo-aside {
+    border-left: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+  }
+  .vo-cell {
+    padding: 28px 24px 20px;
+  }
+  .vo-cell + .vo-cell {
+    border-top: 1px solid var(--rule);
+  }
+  .vo-label {
+    font-size: 11px;
+    margin: 0 0 12px;
+  }
+  .vo-value {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-wrap: anywhere;
+  }
+  .vo-date {
+    font-size: 12px;
+  }
+  .vo-actions {
+    display: flex;
+    gap: 8px;
+    padding: 20px 24px 24px;
+    margin-top: auto;
+  }
+
+  /* The dark band: figures on the frame's colour with its glow. */
+  .vo-band {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    background:
+      radial-gradient(70% 160% at 90% 130%, rgba(252, 58, 30, 0.85), transparent 65%),
+      #0d0d0d;
+    color: #eeeeee;
+    animation: vo-in 0.7s 0.08s var(--ease) both;
+  }
+  .vo-figure {
+    min-height: 176px;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 1px solid rgba(238, 238, 238, 0.12);
+  }
+  .vo-figure:first-child {
+    border-left: 0;
+  }
+  .vo-figure .k {
+    font-size: 11px;
+    color: rgba(238, 238, 238, 0.75);
+  }
+  .vo-figure .n {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 64px;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+  }
+  .vo-figure .n small {
+    font-size: 28px;
+    color: rgba(238, 238, 238, 0.5);
+  }
+  .vo-body {
+    padding: 0 24px 80px;
+  }
+  @keyframes vo-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vo-title,
+    .vo-band {
+      animation: none;
+    }
+  }
+
+  /* ---------------------------------------------------------- surfaces */
+
+  [data-brand='volante'] .section-head {
+    margin: 40px 0 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  [data-brand='volante'] .card,
+  [data-brand='volante'] .endpoint,
+  [data-brand='volante'] .tool-list,
+  [data-brand='volante'] .banner {
+    border-radius: 0;
+    background: transparent;
+  }
+  [data-brand='volante'] .endpoint {
+    padding: 0;
+    min-height: 48px;
+    border-width: 0 0 1px;
+    border-color: var(--rule);
+  }
+  [data-brand='volante'] .endpoint:first-of-type {
+    border-top: 1px solid var(--rule);
+  }
+  [data-brand='volante'] .endpoint + .endpoint {
+    margin-top: 0;
+  }
+  [data-brand='volante'] .endpoint .label {
+    width: 110px;
+  }
+  [data-brand='volante'] .logs,
+  [data-brand='volante'] .snippet {
+    border-radius: 4px;
+    background: var(--code-bg);
+    border-color: var(--rule);
+    font-size: 11.5px;
+  }
+  [data-brand='volante'] .banner {
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--accent);
+    padding: 12px 16px;
+  }
+
+  [data-brand='volante'] .server-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    counter-reset: srv;
+  }
+  [data-brand='volante'] .server-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 0;
+    min-height: 56px;
+    border-width: 0 0 1px;
+    border-color: var(--rule);
+    counter-increment: srv;
+  }
+  [data-brand='volante'] .server-card::before {
+    content: counter(srv, decimal-leading-zero) '.';
+    width: 36px;
+    flex: none;
+    font-size: 11px;
+    color: var(--accent);
+  }
+  [data-brand='volante'] .server-card:hover {
+    transform: none;
+    border-color: var(--rule);
+    background: var(--panel);
+  }
+  [data-brand='volante'] .server-card .top {
+    width: 220px;
+    flex: none;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .server-card .top::after {
+    content: '';
+  }
+  [data-brand='volante'] .server-card .sub {
+    flex: 1;
+    min-width: 0;
+    font-size: 11px;
+  }
+  [data-brand='volante'] .server-card .meta {
+    flex: none;
+    padding-right: 12px;
+    font-size: 11px;
+  }
+
+  /* ---------------------------------------------------------- controls */
+
+  [data-brand='volante'] .btn {
+    border-radius: 3px;
+    border: 1px solid var(--text);
+    background: transparent;
+    color: var(--text);
+    min-height: 34px;
+    padding: 0 16px;
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 0;
+    transition: background 0.15s var(--ease), color 0.15s var(--ease);
+  }
+  [data-brand='volante'] .btn:hover {
+    background: var(--text);
+    color: var(--page);
+  }
+  :root[data-brand='volante'] .btn.primary {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--page);
+    box-shadow: none;
+  }
+  :root[data-brand='volante'] .btn.primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+  }
+  [data-brand='volante'] .btn.ghost {
+    border-color: transparent;
+  }
+  [data-brand='volante'] .btn.ghost:hover {
+    background: var(--panel);
+    color: var(--text);
+  }
+  [data-brand='volante'] .btn.danger {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  [data-brand='volante'] .btn.danger:hover {
+    background: var(--accent);
+    color: #ffffff;
+  }
+  [data-brand='volante'] .btn.sm {
+    min-height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+  [data-brand='volante'] .icon-btn {
+    border-radius: 3px;
+  }
+  [data-brand='volante'] .icon-btn svg {
+    stroke-width: 1.4;
+  }
+
+  [data-brand='volante'] .input,
+  [data-brand='volante'] .textarea,
+  [data-brand='volante'] .select {
+    border-radius: 3px;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    font-size: 12.5px;
+  }
+  [data-brand='volante'] .input:focus,
+  [data-brand='volante'] .textarea:focus {
+    border-color: var(--text);
+  }
+  [data-brand='volante'] .search {
+    border-radius: 3px;
+    border-color: var(--border-strong);
+  }
+  [data-brand='volante'] .search:focus-within {
+    border-color: var(--text);
+  }
+
+  [data-brand='volante'] .segmented {
+    border-radius: 3px;
+    border: 1px solid var(--text);
+    padding: 0;
+    gap: 0;
+  }
+  [data-brand='volante'] .segmented button {
+    border-radius: 0;
+    padding: 0 14px;
+    height: 30px;
+    font-size: 11px;
+    color: var(--text);
+  }
+  [data-brand='volante'] .segmented button + button {
+    border-left: 1px solid var(--text);
+  }
+  [data-brand='volante'] .segmented button:hover {
+    background: var(--panel);
+  }
+  [data-brand='volante'] .segmented button.on {
+    background: var(--text);
+    color: var(--page);
+  }
+
+  [data-brand='volante'] .switch {
+    border-radius: 2px;
+    background: var(--border-strong);
+  }
+  [data-brand='volante'] .switch::after {
+    border-radius: 1px;
+    box-shadow: none;
+  }
+  [data-brand='volante'] .switch-wrap input:checked + .switch {
+    background: var(--accent);
+  }
+
+  [data-brand='volante'] .chip {
+    border-radius: 3px;
+    border: 0;
+    background: var(--panel);
+    color: var(--text-muted);
+    font-size: 10.5px;
+    padding: 3px 8px;
+  }
+  [data-brand='volante'] .chip.on {
+    background: var(--text);
+    color: var(--page);
+  }
+
+  [data-brand='volante'] .badge,
+  [data-brand='volante'] .badge.read,
+  [data-brand='volante'] .badge.write,
+  [data-brand='volante'] .badge.destructive {
+    background: transparent;
+    outline: none;
+    padding: 0;
+    font-size: 10px;
+    letter-spacing: 0;
+    color: var(--text-faint);
+  }
+  [data-brand='volante'] .badge::before {
+    content: '[';
+  }
+  [data-brand='volante'] .badge::after {
+    content: ']';
+  }
+  [data-brand='volante'] .badge.destructive {
+    color: var(--accent);
+  }
+  [data-brand='volante'] .badge.inferred::after {
+    content: '*]';
+  }
+
+  [data-brand='volante'] .tabs {
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  [data-brand='volante'] .tabs button {
+    font-size: 11.5px;
+    color: var(--text-faint);
+    letter-spacing: 0;
+    border-bottom: 0;
+    padding: 12px 0;
+  }
+  [data-brand='volante'] .tabs button.on {
+    color: var(--text);
+  }
+  [data-brand='volante'] .tabs button.on::before {
+    content: '[';
+  }
+  [data-brand='volante'] .tabs button.on::after {
+    content: ']';
+  }
+
+  [data-brand='volante'] .link,
+  [data-brand='volante'] .tool .override {
+    color: var(--accent);
+  }
+  [data-brand='volante'] :focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ------------------------------------------------------------ status */
+
+  [data-brand='volante'] .dot {
+    width: 7px;
+    height: 7px;
+  }
+  [data-brand='volante'] .dot.ready {
+    background: var(--text);
+    box-shadow: none;
+  }
+  [data-brand='volante'] .dot.error {
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+  [data-brand='volante'] .dot.needs-auth {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    box-shadow: none;
+  }
+  [data-brand='volante'] .dot.starting {
+    background: transparent;
+    border: 1.5px solid var(--text-faint);
+  }
+
+  /* ------------------------------------------------------------- lists */
+
+  [data-brand='volante'] .tool-list {
+    border: 0;
+    border-top: 1px solid var(--rule);
+  }
+  [data-brand='volante'] .tool {
+    background: transparent;
+    padding: 14px 0;
+    border-top: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  [data-brand='volante'] .tool:hover {
+    background: transparent;
+  }
+  [data-brand='volante'] .tool .name {
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .tool .name > span:first-child::before {
+    content: '/\00a0';
+    color: var(--text-faint);
+  }
+  [data-brand='volante'] .tool .desc {
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 1.55;
+    text-transform: uppercase;
+  }
+
+  [data-brand='volante'] .act-list {
+    gap: 0;
+  }
+  [data-brand='volante'] .act,
+  [data-brand='volante'] .act.fail,
+  [data-brand='volante'] .act.session {
+    border-radius: 0;
+    border-width: 0 0 1px;
+    border-color: var(--rule);
+    background: transparent;
+    animation: none;
+  }
+  [data-brand='volante'] .act-row {
+    padding: 0;
+    min-height: 44px;
+  }
+  [data-brand='volante'] .act.fail .tool-name,
+  [data-brand='volante'] .act-err {
+    color: var(--accent);
+  }
+  [data-brand='volante'] .act-detail {
+    padding: 0 0 16px;
+  }
+
+  [data-brand='volante'] .client-grid {
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+    margin-top: 16px;
+  }
+  [data-brand='volante'] .client {
+    border: 0;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0;
+    padding: 20px;
+    min-height: 180px;
+  }
+  [data-brand='volante'] .client.connected {
+    background: var(--panel);
+    border-color: var(--rule);
+  }
+  [data-brand='volante'] .client.missing {
+    opacity: 0.5;
+  }
+  [data-brand='volante'] .client-mark,
+  [data-brand='volante'] .client.connected .client-mark {
+    border-radius: 3px;
+    background: var(--panel);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+  }
+  [data-brand='volante'] .client.connected .client-mark {
+    background: var(--accent);
+    color: #ffffff;
+  }
+  [data-brand='volante'] .client .name {
+    font-size: 13px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .client .name::before {
+    content: '/\00a0';
+    color: var(--text-faint);
+  }
+  [data-brand='volante'] .sessions {
+    border-width: 1px 0;
+    border-color: var(--rule);
+    border-radius: 0;
+    margin-top: 16px;
+  }
+  [data-brand='volante'] .section-head + .act-list,
+  [data-brand='volante'] .section-head + .sessions {
+    border-top: 0;
+    margin-top: 0;
+  }
+
+  /* ----------------------------------------------------------- dialogs */
+
+  [data-brand='volante'] .overlay {
+    background: rgba(13, 13, 13, 0.55);
+  }
+  [data-brand='volante'] .dialog {
+    border-radius: 8px;
+    border: 0;
+    box-shadow: var(--shadow);
+  }
+  [data-brand='volante'] .dialog-nav {
+    background: #0d0d0d;
+    border-right: 0;
+    padding: 24px 8px;
+    --text: #eeeeee;
+    --text-muted: rgba(238, 238, 238, 0.7);
+    --panel: rgba(238, 238, 238, 0.08);
+    color: var(--text);
+  }
+  [data-brand='volante'] .dialog-nav h2 {
+    font-size: 28px;
+    margin: 0 12px 24px;
+    color: #eeeeee;
+  }
+  [data-brand='volante'] .dialog-nav .nav-item svg {
+    display: none;
+  }
+  [data-brand='volante'] .dialog-nav .nav-item::before {
+    content: '○';
+    font-size: 10px;
+  }
+  [data-brand='volante'] .dialog-nav .nav-item.active::before {
+    content: '●';
+    color: var(--accent);
+  }
+  [data-brand='volante'] .dialog-head h3 {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .dialog-head h3::before {
+    content: '/\00a0';
+    color: var(--text-faint);
+  }
+  [data-brand='volante'] .dialog.small h3 {
+    font-size: 28px;
+  }
+  [data-brand='volante'] .dialog.small p {
+    font-size: 11.5px;
+    font-weight: 300;
+  }
+  [data-brand='volante'] .presets {
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+  [data-brand='volante'] .preset {
+    border-radius: 0;
+    border: 0;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 18px;
+    min-height: 110px;
+  }
+  [data-brand='volante'] .preset:hover {
+    transform: none;
+    background: #0d0d0d;
+    color: #eeeeee;
+  }
+  [data-brand='volante'] .preset:hover .d {
+    color: rgba(238, 238, 238, 0.7);
+  }
+  [data-brand='volante'] .preset .t {
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .preset .t::before {
+    content: '/\00a0';
+    color: var(--accent);
+  }
+  [data-brand='volante'] .preset .d {
+    font-size: 10.5px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+  [data-brand='volante'] .preset .client-mark {
+    display: none;
+  }
+  [data-brand='volante'] .srow .l .t {
+    font-size: 12px;
+  }
+  [data-brand='volante'] .srow .l .h {
+    font-size: 10.5px;
+    font-weight: 300;
+  }
+  [data-brand='volante'] .menu {
+    border-radius: 4px;
+  }
+  [data-brand='volante'] .toast {
+    border-radius: 4px;
+    border: 0;
+    background: #0d0d0d;
+    color: #eeeeee;
+    font-size: 11.5px;
+  }
+  [data-brand='volante'] .toast svg {
+    color: var(--accent);
+  }
+  [data-brand='volante'] .checkbox {
+    accent-color: var(--accent);
+  }
+  [data-brand='volante'] .empty .brand-mark {
+    color: var(--text);
+    opacity: 1;
+  }
+  [data-brand='volante'] .empty h3 {
+    font-size: 32px;
+  }
+  [data-brand='volante'] .empty p {
+    font-size: 11px;
+    font-weight: 300;
+  }
+}
+
+@layer app {
+  /* Buttons reset text-transform in the UA sheet; opt them back in. */
+  [data-brand='volante'] button,
+  [data-brand='volante'] .btn,
+  [data-brand='volante'] label {
+    text-transform: uppercase;
+  }
+  [data-brand='volante'] button .tool-name,
+  [data-brand='volante'] button .sub,
+  [data-brand='volante'] button .mono,
+  [data-brand='volante'] .client .path {
+    text-transform: none;
+  }
+  /* Brackets sit tight against their words. */
+  [data-brand='volante'] .badge,
+  [data-brand='volante'] .tabs button {
+    gap: 0;
+  }
+  [data-brand='volante'] .tabs .n {
+    margin-left: 6px;
+  }
+}
+
+@layer app {
+  [data-brand='volante'] .vo-aside .steps {
+    margin: 0;
+    padding: 28px 24px 12px;
+  }
+  [data-brand='volante'] .steps-label {
+    font-size: 11px;
+    letter-spacing: 0;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  [data-brand='volante'] .steps-label::before {
+    content: '[';
+  }
+  [data-brand='volante'] .steps-label::after {
+    content: ']';
+  }
+  [data-brand='volante'] .step {
+    border-color: var(--rule);
+    align-items: flex-start;
+    gap: 14px;
+  }
+  [data-brand='volante'] .step-n {
+    font-size: 11px;
+    padding-top: 1px;
+  }
+  [data-brand='volante'] .step-title {
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .step-text {
+    font-size: 10.5px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+  [data-brand='volante'] .step.done .step-text {
+    display: none;
+  }
+}
+
+@layer app {
+  [data-brand='volante'] .policy-q {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  [data-brand='volante'] .policy-q::before {
+    content: '/\00a0';
+    color: var(--text-faint);
+  }
+}
+
+@layer app {
+  [data-brand='volante'] .client {
+    min-height: 0;
+    gap: 16px;
+  }
+}
+
+@layer app {
+  [data-brand='volante'] .wf-strip {
+    border-radius: 0;
+    border-width: 1px 0;
+    border-color: var(--rule);
+    padding: 12px 0;
+  }
+  [data-brand='volante'] .wf-strip-label::before {
+    content: '[';
+  }
+  [data-brand='volante'] .wf-strip-label::after {
+    content: ']';
+  }
+  [data-brand='volante'] .wf-strip-label {
+    color: var(--text);
+    font-size: 11px;
+  }
+  [data-brand='volante'] .wf-strip-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  [data-brand='volante'] .wf-steps {
+    font-size: 11.5px;
+    font-weight: 300;
+  }
+  [data-brand='volante'] .wf-steps b {
+    font-weight: 500;
+    color: var(--text);
+  }
+  [data-brand='volante'] .wf-row svg {
+    color: var(--accent);
+  }
+  [data-brand='volante'] .wf-back {
+    font-size: 11px;
+  }
+}
+
+@layer app {
+  [data-brand='volante'] .side-group {
+    padding: 12px 12px 4px;
+    font-size: 10.5px;
+  }
+  [data-brand='volante'] .side-group::before {
+    content: '/\00a0';
+  }
+}
