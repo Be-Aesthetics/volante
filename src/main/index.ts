@@ -257,11 +257,11 @@ function init(): void {
   ups = new UpstreamManager(store, () => `http://127.0.0.1:${store.settings.port}/oauth/callback`)
   router = new Router(store, ups, activity)
 
-  router.onOAuthCallback = async (serverId, code, err) => {
+  router.onOAuthCallback = async (serverId, state, code, err) => {
     if (err || !code) throw new Error(err ?? 'No authorization code')
     const u = ups.get(serverId)
     if (!u) throw new Error('Unknown server')
-    await u.finishAuth(code)
+    await u.finishAuth(code, state)
     showWindow()
   }
 

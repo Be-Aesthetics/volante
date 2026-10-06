@@ -88,6 +88,7 @@ interface AuthState {
 
 class RouterAuthProvider implements OAuthClientProvider {
   pendingUrl?: URL
+  private issuedState?: string
   constructor(
     private serverId: string,
     private store: Store,
@@ -114,7 +115,12 @@ class RouterAuthProvider implements OAuthClientProvider {
     }
   }
   state(): string {
-    return `${this.serverId}.${randomBytes(8).toString('hex')}`
+    this.issuedState = `${this.serverId}.${randomBytes(16).toString('hex')}`
+    return this.issuedState
+  }
+  /** True only for the state this sign-in handed out, so a forged callback link is refused. */
+  expectsState(state: string): boolean {
+    return !!this.issuedState && state === this.issuedState
   }
   clientInformation() {
     return this.st.client
@@ -129,6 +135,8 @@ class RouterAuthProvider implements OAuthClientProvider {
     this.patch({ tokens })
   }
   redirectToAuthorization(url: URL): void {
+    // The address comes from the server, and it is opened in the browser, so only web links are accepted.
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new Error(`Refusing a sign-in link that is not a web address (${url.protocol})`)
     this.pendingUrl = url
   }
   saveCodeVerifier(v: string): void {
@@ -377,7 +385,8 @@ export class Upstream {
     await this.start()
   }
 
-  async finishAuth(code: string): Promise<void> {
+  async finishAuth(code: string, state: string): Promise<void> {
+    if (!this.auth?.expectsState(state)) throw new Error('This sign-in link is out of date. Start the sign-in again from the app.')
     const t = this.transport
     if (!t?.finishAuth) throw new Error('No sign-in in progress')
     await t.finishAuth(code)

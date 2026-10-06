@@ -81,7 +81,7 @@ export class Router extends EventEmitter {
   private sessions = new Map<string, Session>()
   running = false
   error?: string
-  onOAuthCallback?: (serverId: string, code: string | null, error: string | null) => Promise<void>
+  onOAuthCallback?: (serverId: string, state: string, code: string | null, error: string | null) => Promise<void>
 
   constructor(
     private store: Store,
@@ -175,7 +175,7 @@ export class Router extends EventEmitter {
     const host = (req.headers.host ?? '').replace(/:\d+$/, '')
     if (!['127.0.0.1', 'localhost', '[::1]'].includes(host)) return sendJson(res, 403, { error: 'forbidden host' })
     const origin = req.headers.origin
-    if (origin && !/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(origin) && origin !== 'null')
+    if (origin && !/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(origin))
       return sendJson(res, 403, { error: 'forbidden origin' })
 
     if (url.pathname === '/health') return sendJson(res, 200, { ok: true, name: BRAND.clientKey })
@@ -240,7 +240,7 @@ export class Router extends EventEmitter {
     let ok = !!code && !err
     let msg = ok ? `Signed in. You can close this tab and return to ${BRAND.name}.` : `Sign-in failed: ${err ?? 'no code returned'}`
     try {
-      await this.onOAuthCallback?.(serverId, code, err)
+      await this.onOAuthCallback?.(serverId, state, code, err)
     } catch (e) {
       ok = false
       msg = `Sign-in failed: ${errMsg(e)}`
