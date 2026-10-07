@@ -1,6 +1,6 @@
 {
   "name": "volante",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "One local MCP endpoint that connects your AI apps to every MCP server you use.",
   "author": "BE Aesthetics",
   "license": "MIT",
