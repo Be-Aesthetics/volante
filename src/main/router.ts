@@ -18,6 +18,7 @@ import type { ActivityEntry, RouterStatus } from '../shared/types'
 import { errMsg, type UpstreamManager } from './upstream'
 import type { Store } from './store'
 import { BRAND } from '../shared/brand'
+import { callbackPage } from './callback-page'
 
 const CALL_TIMEOUT_MS = 10 * 60_000
 const ACTIVITY_MAX = 1000
@@ -238,15 +239,15 @@ export class Router extends EventEmitter {
     const code = url.searchParams.get('code')
     const err = url.searchParams.get('error_description') ?? url.searchParams.get('error')
     let ok = !!code && !err
-    let msg = ok ? `Signed in. You can close this tab and return to ${BRAND.name}.` : `Sign-in failed: ${err ?? 'no code returned'}`
+    let msg = ok ? `Signed in. Head back to ${BRAND.name}; your AI apps can use it straight away.` : (err ?? 'No sign-in code was returned.')
     try {
       await this.onOAuthCallback?.(serverId, state, code, err)
     } catch (e) {
       ok = false
-      msg = `Sign-in failed: ${errMsg(e)}`
+      msg = errMsg(e)
     }
     res.writeHead(ok ? 200 : 400, { 'content-type': 'text/html; charset=utf-8' })
-    res.end(callbackPage(ok, msg))
+    res.end(callbackPage(ok, msg, this.ups.get(serverId)?.cfg.name))
   }
 
   private instructions(): string {
@@ -406,13 +407,4 @@ async function readJson(req: IncomingMessage): Promise<unknown> {
   } catch {
     return undefined
   }
-}
-
-function callbackPage(ok: boolean, msg: string): string {
-  const esc = msg.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!)
-  return `<!doctype html><meta charset="utf-8"><title>${BRAND.name}</title>
-<style>body{margin:0;height:100vh;display:grid;place-items:center;background:#0b0c0f;color:#e4eaf1;font:15px 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif}
-.c{text-align:center;max-width:420px;padding:24px}h1{font:400 26px Georgia,serif;margin:14px 0 8px}p{color:#97a5b4;margin:0}
-.d{width:10px;height:10px;border-radius:50%;margin:0 auto;background:${ok ? '#2fb36e' : '#e0574f'};box-shadow:0 0 14px ${ok ? '#2fb36e' : '#e0574f'}}</style>
-<div class="c"><div class="d"></div><h1>${ok ? 'Connected' : 'Something went wrong'}</h1><p>${esc}</p></div>`
 }
