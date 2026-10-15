@@ -254,6 +254,9 @@ function registerIpc(): void {
 
 function init(): void {
   store = new Store()
+  // Re-assert the login item on every start, so the system entry always matches the setting
+  // even if it was removed or written somewhere else (an installed copy only; dev runs skip it).
+  if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: store.settings.launchAtLogin, args: ['--hidden'] })
   ups = new UpstreamManager(store, () => `http://127.0.0.1:${store.settings.port}/oauth/callback`)
   router = new Router(store, ups, activity)
 
