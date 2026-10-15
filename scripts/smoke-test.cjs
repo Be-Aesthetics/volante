@@ -72,7 +72,7 @@ async function main() {
   const b = new Client({ name: 'smoke-bridge', version: '1' })
   await b.connect(
     new StdioClientTransport({
-      command: join(__dirname, '..', 'node_modules', 'electron', 'dist', 'electron.exe'),
+      command: require('electron'),
       args: [join(__dirname, '..', process.env.OUT_DIR || 'out', 'main', 'bridge.js')],
       env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', ROUTER_URL: url, ROUTER_TOKEN: token },
       stderr: 'inherit'

@@ -1,11 +1,13 @@
 import { app, BrowserWindow, ipcMain, Menu, nativeImage, nativeTheme, shell, Tray } from 'electron'
 import { randomUUID } from 'node:crypto'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { slugPrefix, type AppState, type ClientId, type ImportCandidate, type ServerConfig, type Settings } from '../shared/types'
 import { Store, newToken } from './store'
 import { BRAND } from '../shared/brand'
 import { UpstreamManager } from './upstream'
 import { Activity, Router } from './router'
+import { fixShellPath } from './shell-path'
 import { connectClient, disconnectClient, importCandidates, listClients, refreshConnected, removeFromClient, snippet, type Endpoint } from './clients'
 
 // Each brand keeps its own config; ROUTER_DATA_DIR lets a dev or test run use a scratch one.
@@ -18,6 +20,7 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 if (process.platform === 'win32') app.setAppUserModelId(BRAND.appId)
+fixShellPath()
 const isMac = process.platform === 'darwin'
 
 let win: BrowserWindow | null = null
@@ -127,7 +130,9 @@ function updateTray(): void {
 }
 
 function createTray(): void {
-  const img = nativeImage.createFromPath(resource('tray.png'))
+  const file = resource('tray.png')
+  // The 32 px tray art is a @2x image on macOS, so it sits at the menu bar's 16 pt.
+  const img = isMac && existsSync(file) ? nativeImage.createFromBuffer(readFileSync(file), { scaleFactor: 2 }) : nativeImage.createFromPath(file)
   // The menu bar recolours template images for light and dark menus.
   if (isMac) img.setTemplateImage(true)
   tray = new Tray(img.isEmpty() ? nativeImage.createEmpty() : img)
