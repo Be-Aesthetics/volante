@@ -45,7 +45,7 @@ Volante is a desktop app that runs a single [MCP](https://modelcontextprotocol.i
 - **Several Webflow workspaces.** Add each workspace by name; each gets its own sign-in, its own tool prefix and its own permissions, so your AI always knows which workspace it is working in.
 - **Permissions per server.** *Allow everything*, *Look only*, *No deleting* or *Choose tools*, with a switch per tool on top. Tools are tagged as reads, changes or deletes, from the server's own annotations or, failing that, from the tool name.
 - **No name clashes.** Tools are prefixed per server (`webflow_acme__list_sites`, `github__create_issue`).
-- **One-click connect** for Claude Code, Claude Desktop, Cursor, VS Code, Windsurf, Gemini CLI and Codex, plus import of the servers those apps already have. Each app's config file is backed up (`*.volante.bak`) before its first edit.
+- **One-click connect** for Claude Code, Claude Desktop, Cursor, VS Code, Windsurf, Antigravity, Gemini CLI and Codex, plus import of the servers those apps already have. Each app's config file is backed up (`*.volante.bak`) before its first edit.
 - **Activity log** of every request: arguments, result, duration and which app asked.
 - **Stays out of the way.** Lives in the system tray or menu bar, can start when you sign in, and the stdio bridge starts it on demand for apps that launch MCP servers as processes.
 
@@ -74,7 +74,7 @@ The installers aren't code-signed yet, so the first launch needs one extra step:
 
 | App | Transport |
 | --- | --- |
-| Claude Code, Cursor, VS Code, Windsurf, Gemini CLI | Streamable HTTP to `http://127.0.0.1:47900/mcp` with `Authorization: Bearer <token>` |
+| Claude Code, Cursor, VS Code, Windsurf, Antigravity, Gemini CLI | Streamable HTTP to `http://127.0.0.1:47900/mcp` with `Authorization: Bearer <token>` |
 | Claude Desktop, Codex | Volante's own executable in Node mode as a stdio bridge (`out/main/bridge.js`) |
 
 ## Build from source

@@ -107,6 +107,18 @@ const CLIENTS: JsonClient[] = [
     entry: (ep) => ({ serverUrl: ep.url, ...(authHeaders(ep) ? { headers: authHeaders(ep) } : {}) })
   },
   {
+    id: 'antigravity',
+    name: 'Antigravity',
+    mode: 'http',
+    paths: () => [join(home, '.gemini', 'config', 'mcp_config.json')],
+    installed: () =>
+      existsSync(join(home, '.gemini', 'antigravity')) ||
+      existsSync(join(appData, 'Antigravity')) ||
+      existsSync(join(home, '.gemini', 'config')),
+    serversKey: 'mcpServers',
+    entry: (ep) => ({ serverUrl: ep.url, ...(authHeaders(ep) ? { headers: authHeaders(ep) } : {}) })
+  },
+  {
     id: 'gemini',
     name: 'Gemini CLI',
     mode: 'http',

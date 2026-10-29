@@ -92,7 +92,7 @@ export interface RouterStatus {
   sessions: { id: string; client: string; since: number }[]
 }
 
-export type ClientId = 'claude-desktop' | 'claude-code' | 'cursor' | 'vscode' | 'windsurf' | 'gemini' | 'codex'
+export type ClientId = 'claude-desktop' | 'claude-code' | 'cursor' | 'vscode' | 'windsurf' | 'antigravity' | 'gemini' | 'codex'
 
 export interface ClientView {
   id: ClientId

@@ -12,6 +12,7 @@ const MARK: Record<ClientId, string> = {
   cursor: 'Cu',
   vscode: 'VS',
   windsurf: 'W',
+  antigravity: 'A',
   gemini: 'G',
   codex: 'Cx'
 }
